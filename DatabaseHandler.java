@@ -76,16 +76,18 @@ public class DatabaseHandler {
             {}
         }
     }
-    //this method will insert a recipe into the database
-    //it will first call insertRecipe then make several insert statements into
-    //the RecipeIngredients table for each ingredient that is required in that
-    //recipe
+    
     /*
-    This method will require a recipe object and an array of ingredients
+    this method will insert a recipe into the database
+    it will first call insertRecipe then make several insert statements into
+    the RecipeIngredients table for each ingredient that is required in that
+    recipe
+    
+    **This method will require a recipe object and an array of ingredients**
     */
     public static void addRecipe(Recipe r, Ingredient[] i){
         //add recipe to the table
-        insertRecipe(r.getName(),r.getInstruction(),r.getCategory());
+        insertRecipe(r);
         //need to get r's ID number from the database
         getRecipeID(r);
         //add all of the ingredients required to the RecipeIngredients table
@@ -127,9 +129,11 @@ public class DatabaseHandler {
             }
         }
     }
+    
     //this method will insert a recipe into the database
-    //TODO: change this method to accept a recipe object
-    public static void insertRecipe(String n, String i, String c){
+    //this method is private because the gui should use addRecipe in order to ensure
+    //that the user is providing the recipe along with the ingredients.
+    private static void insertRecipe(Recipe r){
         //creating connection to the database
         Connection conn = DatabaseHandler.setupConnection();
         //creating oracle objects
@@ -142,9 +146,9 @@ public class DatabaseHandler {
 
             pst = (OraclePreparedStatement) conn.prepareStatement(sqlStatement);            
             //attaching the data to the statement           
-            pst.setString(1, n);
-            pst.setString(2, i);
-            pst.setString(3, c);
+            pst.setString(1, r.getName());
+            pst.setString(2, r.getInstruction());
+            pst.setString(3, r.getCategory());
             //inserting into the database
             pst.execute();                                    
         }
@@ -163,10 +167,10 @@ public class DatabaseHandler {
             DatabaseHandler.close(conn);
         }
     }
-
+    
     //this method will insert an ingredent into the database
-    public static void insertIngredient(String n, int calories, int fat, int sodium, 
-            String group, int proteins, int sugar){
+    //TODO: need to check to see what happens when a duplicate ingredient name is added
+    public static void insertIngredient(Ingredient i){
         //create connection to database
         Connection conn = DatabaseHandler.setupConnection();
         //preparing statement object
@@ -178,13 +182,13 @@ public class DatabaseHandler {
             String sqlStatement = "insert into ingredients values (?, ?, ?, ?, ?, ?, ?)";                                    
             pst = (OraclePreparedStatement) conn.prepareStatement(sqlStatement);            
             //adding values to the statement
-            pst.setString(1, n);
-            pst.setInt(2, calories);
-            pst.setInt(3, fat);
-            pst.setInt(4, sodium);
-            pst.setString(5, group);
-            pst.setInt(6, proteins);
-            pst.setInt(7, sugar);
+            pst.setString(1, i.getName());
+            pst.setInt(2, i.getCalories());
+            pst.setInt(3, i.getFat());
+            pst.setInt(4, i.getSodium());
+            pst.setString(5, i.getGroup());
+            pst.setInt(6, i.getProtien());
+            pst.setInt(7, i.getSugar());
             //inserting the data
             pst.execute();                                    
         }
@@ -200,6 +204,7 @@ public class DatabaseHandler {
             DatabaseHandler.close(conn);
         } 
     }
+    
     //will return a list of all recipies in the database as recipe objects
     public static Recipe[] getRecipes(){
         //creating connection to database
@@ -249,6 +254,7 @@ public class DatabaseHandler {
         //return the list        
         return returnedRecipes;
     }
+    
     //this method will return an array of ingredients from the database
     public static Ingredient[] getIngredients(){
         //creating connection to database
@@ -303,6 +309,7 @@ public class DatabaseHandler {
         //return the list        
         return returnedIngredients;
     }
+    
     //this method will set query the database for a recipe and then set the objects
     //id to the RecipeID from the table
     private static Recipe getRecipeID(Recipe r){
@@ -342,5 +349,58 @@ public class DatabaseHandler {
             DatabaseHandler.close(conn);
         } 
         return r;
-    }    
+    }
+    
+    //this method will query the database for recipes that are similar to user input
+    public static Recipe[] searchRecipes(String search){
+        //creating connection to database
+        Connection conn = DatabaseHandler.setupConnection();
+        //preparing oracle objects
+        OraclePreparedStatement pst = null;
+        OracleResultSet rs = null;
+        //preparing Recipe List to return
+        List<Recipe> currentRecipes = new ArrayList<Recipe>();        
+        try
+        {
+            //grabbing all rows from the recipe table
+            String sqlStatement = "SELECT * FROM Recipe WHERE name=%?%";            
+            pst = (OraclePreparedStatement) conn.prepareStatement(sqlStatement);
+            //adding data to prepared statement
+            pst.setString(1, search);
+            //will contain the rows from the query
+            rs = (OracleResultSet) pst.executeQuery();
+            //iterating through each row
+            while(rs.next()){
+                //create recipe object from the columns in the row.
+                int id = rs.getInt("RecipeID");
+                String category = rs.getString("Category");
+                String instruction = rs.getString("Instruction");
+                String name = rs.getString("Name");
+                //make a recipe object from the columns
+                Recipe row = new Recipe(id,category,instruction,name);
+                //add the recipe to the list
+                currentRecipes.add(row);
+            }
+        }
+        catch (Exception e)
+        {
+            //display an error message of what went wrong
+            JOptionPane.showMessageDialog(null, e);
+        }
+        finally
+        {            
+            //close the connections
+            DatabaseHandler.close(rs);
+            DatabaseHandler.close(pst);
+            DatabaseHandler.close(conn);
+        } 
+        //turn the list into an array for the calling method
+        //TODO: ask Brain if the calling method can use a list instead of an array.
+        Recipe[] returnedRecipes = new Recipe[currentRecipes.size()];
+        for(int i=0;i<currentRecipes.size();i++){
+           returnedRecipes[i]=currentRecipes.get(i);
+        }
+        //return the list        
+        return returnedRecipes;
+    }
 }
