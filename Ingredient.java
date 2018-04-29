@@ -8,6 +8,7 @@
  *
  * author: D. Koger
  */
+package test;
 public class Ingredient {
     private int id;
     private String name;

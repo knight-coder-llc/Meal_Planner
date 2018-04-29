@@ -8,11 +8,12 @@
  *
  * author: D Koger
  */
+package test;
 public class Recipe {
-    int recipeID;
-    String catagory;
-    String instruction;
-    String name;
+    private int recipeID;
+    private String catagory;
+    private String instruction;
+    private String name;
     //full Constructor
     Recipe(int id, String cat, String instruct, String n){
         recipeID = id;
