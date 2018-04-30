@@ -1,3 +1,4 @@
+package recipehaoling;
 
 import java.sql.Connection;
 import java.time.LocalDateTime;
@@ -5,7 +6,10 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import oracle.jdbc.OraclePreparedStatement;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,6 +25,9 @@ public class RecipeFrame extends javax.swing.JFrame {
     //create database handler instance
     DatabaseHandler dbHandler = new DatabaseHandler();
     private ListModel model;
+    
+    //Variables
+    private ArrayList<Ingredient> newIngredients = new ArrayList<>();
        
     public RecipeFrame() {
         initComponents();
@@ -41,21 +48,7 @@ public class RecipeFrame extends javax.swing.JFrame {
         shoppingListView.setText("generate the shopping list here.");
         //this is the recipe list view in the planner tab, have client to check the boxes
         //that they wish to have a recipe to be entered at the checked time period
-        //recipeListView
-        //define model as new list.
-		model = new ListModel();
-		//set list to final for access, and add list items to the list for user selection.
-		//final JList list = new JList();
-		recipeListView.setModel(new AbstractListModel() {
-                        //make a sql statement to get data and store in the array here
-			String[] values = new String[] {"Pizza", "MashedPotatoes", "Chicken", "Ramen noodles", "Guano", "Hot Hoggies", "Toaster Stroodle"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+
     }
 
     /**
@@ -67,6 +60,7 @@ public class RecipeFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mealsGroup = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         RecipeSearchText = new javax.swing.JTextField();
         SearchGo = new javax.swing.JButton();
@@ -80,11 +74,10 @@ public class RecipeFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         DayOfWeekDropMenu = new javax.swing.JComboBox<>();
-        recipeListPanel = new javax.swing.JPanel();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        recipeListView = new javax.swing.JList<>();
+        jPanel4 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        moveFromList = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        recipeSelectionListView = new javax.swing.JTextArea();
         jPanel5 = new javax.swing.JPanel();
         breakfastPlannerCheckbox = new javax.swing.JCheckBox();
         lunchPlannerCheckbox = new javax.swing.JCheckBox();
@@ -93,46 +86,52 @@ public class RecipeFrame extends javax.swing.JFrame {
         lunchPlannerTextView = new javax.swing.JTextField();
         dinnerPlannerTextView = new javax.swing.JTextField();
         clearPlanner = new javax.swing.JButton();
-        storeMealPlan = new javax.swing.JButton();
+        moveToList = new javax.swing.JButton();
+        moveFromList = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         radioBreakfast = new javax.swing.JRadioButton();
         radioLunch = new javax.swing.JRadioButton();
         radioDinner = new javax.swing.JRadioButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        RecipeInstructionView = new javax.swing.JTextPane();
         jLabel4 = new javax.swing.JLabel();
-        RecipeTitleLabel = new javax.swing.JLabel();
+        daysBox = new javax.swing.JComboBox<>();
+        applyButton = new javax.swing.JButton();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        recipeList = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         addRecipePanel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        addRecipeTextField = new javax.swing.JTextField();
+        addRecipeName = new javax.swing.JTextField();
         InstructionsLabel = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        recipeInstructionField = new javax.swing.JTextArea();
+        addRecipeInstructions = new javax.swing.JTextArea();
         storeRecipe = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
-        recipeCategoryField = new javax.swing.JTextField();
-        jPanel6 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        ingredientNameField = new javax.swing.JTextField();
-        caloriesField = new javax.swing.JTextField();
-        sodiumField = new javax.swing.JTextField();
-        proteinField = new javax.swing.JTextField();
-        groupField = new javax.swing.JTextField();
-        sugarField = new javax.swing.JTextField();
-        fatField = new javax.swing.JTextField();
-        ingredientStorebtn = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        addRecipeCategory = new javax.swing.JTextField();
+        ingredientName = new javax.swing.JTextField();
+        ingredientCal = new javax.swing.JTextField();
+        ingredientFat = new javax.swing.JTextField();
+        ingredientSodium = new javax.swing.JTextField();
+        ingredientGroup = new javax.swing.JTextField();
+        ingredientSugar = new javax.swing.JTextField();
+        ingredientProtein = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        ingredientFatlab = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        ingredientProteinlab = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        addIngredient = new javax.swing.JButton();
         searchResultsPane = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         searchResultsView = new javax.swing.JTextArea();
         dateLabel = new javax.swing.JLabel();
         dateTextView = new javax.swing.JTextField();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        debugArea = new javax.swing.JTextArea();
+        jLabel7 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         menuItemSave = new javax.swing.JMenuItem();
@@ -149,11 +148,6 @@ public class RecipeFrame extends javax.swing.JFrame {
 
         SearchGo.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         SearchGo.setText("Go");
-        SearchGo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchActionPerformed(evt);
-            }
-        });
 
         fridgeListView.setEditable(false);
         fridgeListView.setColumns(20);
@@ -205,55 +199,35 @@ public class RecipeFrame extends javax.swing.JFrame {
 
         DayOfWeekDropMenu.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         DayOfWeekDropMenu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Monday", "Tuesday", "Wensday", "Thursday", "Friday", "Saturday", "Sunday" }));
-        DayOfWeekDropMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DayOfWeekDropMenuActionPerformed(evt);
-            }
-        });
-
-        recipeListView.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane7.setViewportView(recipeListView);
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
         jLabel5.setText("Recipe Selection List");
         jLabel5.setToolTipText("");
 
-        moveFromList.setText(">>");
-        moveFromList.setToolTipText("");
-        moveFromList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                moveFromListActionPerformed(evt);
-            }
-        });
+        recipeSelectionListView.setColumns(20);
+        recipeSelectionListView.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        recipeSelectionListView.setRows(5);
+        jScrollPane5.setViewportView(recipeSelectionListView);
 
-        javax.swing.GroupLayout recipeListPanelLayout = new javax.swing.GroupLayout(recipeListPanel);
-        recipeListPanel.setLayout(recipeListPanelLayout);
-        recipeListPanelLayout.setHorizontalGroup(
-            recipeListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(recipeListPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(recipeListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane7)
-                    .addGroup(recipeListPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(moveFromList)
-                        .addGap(0, 20, Short.MAX_VALUE)))
-                .addContainerGap())
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addComponent(jLabel5)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-        recipeListPanelLayout.setVerticalGroup(
-            recipeListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(recipeListPanelLayout.createSequentialGroup()
-                .addGroup(recipeListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(moveFromList))
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         breakfastPlannerCheckbox.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
@@ -269,13 +243,6 @@ public class RecipeFrame extends javax.swing.JFrame {
         dinnerPlannerCheckbox.setToolTipText("");
 
         clearPlanner.setText("Clear");
-        clearPlanner.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearPlannerActionPerformed(evt);
-            }
-        });
-
-        storeMealPlan.setText("Store");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -286,20 +253,17 @@ public class RecipeFrame extends javax.swing.JFrame {
                     .addComponent(breakfastPlannerCheckbox)
                     .addComponent(lunchPlannerCheckbox)
                     .addComponent(dinnerPlannerCheckbox))
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(clearPlanner)
+                        .addContainerGap(134, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(breakfastPlannerTextView, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                            .addComponent(breakfastPlannerTextView)
                             .addComponent(lunchPlannerTextView)
                             .addComponent(dinnerPlannerTextView))
-                        .addGap(10, 10, 10))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(storeMealPlan)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(clearPlanner)
-                        .addGap(40, 40, 40))))
+                        .addGap(10, 10, 10))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,12 +280,15 @@ public class RecipeFrame extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dinnerPlannerCheckbox)
                     .addComponent(dinnerPlannerTextView, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(clearPlanner)
-                    .addComponent(storeMealPlan))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(clearPlanner)
                 .addContainerGap())
         );
+
+        moveToList.setText("<<");
+
+        moveFromList.setText(">>");
+        moveFromList.setToolTipText("");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -329,33 +296,41 @@ public class RecipeFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(recipeListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(moveToList)
+                .addGap(3, 3, 3)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(moveFromList)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
                         .addComponent(DayOfWeekDropMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(21, 21, 21))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(recipeListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(49, 49, 49)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(DayOfWeekDropMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(DayOfWeekDropMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(moveToList)
+                            .addComponent(moveFromList))
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap(42, Short.MAX_VALUE))))
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         ManagerSheet.addTab("Planner", jPanel2);
 
+        mealsGroup.add(radioBreakfast);
         radioBreakfast.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         radioBreakfast.setText("Breakfast");
         radioBreakfast.setToolTipText("");
@@ -366,6 +341,7 @@ public class RecipeFrame extends javax.swing.JFrame {
             }
         });
 
+        mealsGroup.add(radioLunch);
         radioLunch.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         radioLunch.setText("Lunch");
         radioLunch.addActionListener(new java.awt.event.ActionListener() {
@@ -374,6 +350,7 @@ public class RecipeFrame extends javax.swing.JFrame {
             }
         });
 
+        mealsGroup.add(radioDinner);
         radioDinner.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         radioDinner.setText("Dinner");
         radioDinner.setToolTipText("");
@@ -383,58 +360,81 @@ public class RecipeFrame extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane3.setViewportView(RecipeInstructionView);
-
-        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel4.setText("Recipe Instructions");
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Meal Plan");
         jLabel4.setToolTipText("");
 
-        RecipeTitleLabel.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        RecipeTitleLabel.setText("Recipe Title");
+        daysBox.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        daysBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" }));
+
+        applyButton.setText("Apply");
+
+        recipeList.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        recipeList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        recipeList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                recipeListMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(recipeList);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane3.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(radioBreakfast)
-                    .addComponent(radioDinner)
-                    .addComponent(radioLunch))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(132, 132, 132))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(RecipeTitleLabel)
-                .addGap(171, 171, 171))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                .addGap(206, 206, 206)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                .addGap(81, 81, 81)
+                                .addComponent(radioBreakfast)
+                                .addGap(18, 18, 18)
+                                .addComponent(radioLunch)
+                                .addGap(18, 18, 18)
+                                .addComponent(radioDinner)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(daysBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(425, 425, 425)
+                        .addComponent(applyButton))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane8)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE))))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                        .addComponent(RecipeTitleLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(radioBreakfast)
-                        .addGap(74, 74, 74)
-                        .addComponent(radioLunch)
-                        .addGap(80, 80, 80)
-                        .addComponent(radioDinner)
-                        .addGap(118, 118, 118))))
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(radioBreakfast)
+                    .addComponent(radioLunch)
+                    .addComponent(radioDinner)
+                    .addComponent(daysBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(applyButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         ManagerSheet.addTab("Meal Plan", jPanel3);
@@ -449,9 +449,9 @@ public class RecipeFrame extends javax.swing.JFrame {
         InstructionsLabel.setText("Instructions");
         InstructionsLabel.setToolTipText("");
 
-        recipeInstructionField.setColumns(20);
-        recipeInstructionField.setRows(5);
-        jScrollPane6.setViewportView(recipeInstructionField);
+        addRecipeInstructions.setColumns(20);
+        addRecipeInstructions.setRows(5);
+        jScrollPane6.setViewportView(addRecipeInstructions);
 
         storeRecipe.setText("Store");
         storeRecipe.addActionListener(new java.awt.event.ActionListener() {
@@ -462,180 +462,158 @@ public class RecipeFrame extends javax.swing.JFrame {
 
         jLabel14.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel14.setText("Category");
+        jLabel14.setToolTipText("");
+
+        jLabel15.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel15.setText("Ingredients");
+        jLabel15.setToolTipText("");
+
+        ingredientName.setMinimumSize(new java.awt.Dimension(59, 20));
+        ingredientName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ingredientNameActionPerformed(evt);
+            }
+        });
+
+        ingredientCal.setMinimumSize(new java.awt.Dimension(59, 20));
+
+        ingredientFat.setMinimumSize(new java.awt.Dimension(59, 20));
+
+        ingredientSodium.setMinimumSize(new java.awt.Dimension(59, 20));
+
+        ingredientGroup.setMinimumSize(new java.awt.Dimension(59, 20));
+
+        ingredientSugar.setMinimumSize(new java.awt.Dimension(59, 20));
+
+        ingredientProtein.setMinimumSize(new java.awt.Dimension(59, 20));
+
+        jLabel16.setText("Name");
+
+        jLabel17.setText("Calories");
+
+        jLabel18.setText("Sodium");
+
+        ingredientFatlab.setText("Fat");
+
+        jLabel20.setText("Group");
+
+        ingredientProteinlab.setText("Protein");
+
+        jLabel22.setText("Sugar");
+
+        addIngredient.setText("Add");
+        addIngredient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addIngredientActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout addRecipePanelLayout = new javax.swing.GroupLayout(addRecipePanel);
         addRecipePanel.setLayout(addRecipePanelLayout);
         addRecipePanelLayout.setHorizontalGroup(
             addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addRecipePanelLayout.createSequentialGroup()
-                .addContainerGap(31, Short.MAX_VALUE)
-                .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(addRecipePanelLayout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addGap(18, 18, 18)
-                        .addComponent(recipeCategoryField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(storeRecipe))
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addRecipeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47))
             .addGroup(addRecipePanelLayout.createSequentialGroup()
                 .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(addRecipePanelLayout.createSequentialGroup()
-                        .addGap(219, 219, 219)
+                        .addGap(237, 237, 237)
                         .addComponent(jLabel6))
                     .addGroup(addRecipePanelLayout.createSequentialGroup()
-                        .addGap(222, 222, 222)
-                        .addComponent(InstructionsLabel)))
+                        .addGap(240, 240, 240)
+                        .addComponent(jLabel15))
+                    .addGroup(addRecipePanelLayout.createSequentialGroup()
+                        .addGap(245, 245, 245)
+                        .addComponent(jLabel14))
+                    .addGroup(addRecipePanelLayout.createSequentialGroup()
+                        .addGap(204, 204, 204)
+                        .addComponent(addRecipeCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addRecipePanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(addRecipeName, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(165, 165, 165))
+            .addGroup(addRecipePanelLayout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(storeRecipe)
+                    .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 509, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(addRecipePanelLayout.createSequentialGroup()
+                            .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel16)
+                                .addComponent(ingredientName, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel17)
+                                .addComponent(ingredientCal, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(ingredientFatlab)
+                                .addComponent(ingredientFat, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(InstructionsLabel)
+                                .addGroup(addRecipePanelLayout.createSequentialGroup()
+                                    .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel18)
+                                        .addComponent(ingredientSodium, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel20)
+                                        .addComponent(ingredientGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(ingredientProteinlab)
+                                        .addComponent(ingredientProtein, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel22)
+                                        .addComponent(ingredientSugar, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addComponent(addIngredient, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 37, Short.MAX_VALUE))
         );
         addRecipePanelLayout.setVerticalGroup(
             addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(addRecipePanelLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addContainerGap()
                 .addComponent(jLabel6)
-                .addGap(18, 18, 18)
-                .addComponent(addRecipeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(addRecipePanelLayout.createSequentialGroup()
-                        .addComponent(InstructionsLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(storeRecipe))
-                    .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel14)
-                        .addComponent(recipeCategoryField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(addRecipeName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(addRecipeCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22)
+                .addComponent(jLabel15)
+                .addGap(19, 19, 19)
+                .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel18)
+                    .addComponent(ingredientFatlab)
+                    .addComponent(jLabel20)
+                    .addComponent(ingredientProteinlab)
+                    .addComponent(jLabel22))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(addRecipePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ingredientName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ingredientCal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ingredientFat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ingredientSodium, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ingredientProtein, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ingredientGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ingredientSugar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addIngredient)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(InstructionsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(storeRecipe)
+                .addGap(28, 28, 28))
         );
 
         ManagerSheet.addTab("Add Recipe", addRecipePanel);
-
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jLabel7.setText("Name");
-        jLabel7.setToolTipText("");
-
-        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jLabel8.setText("Calories");
-
-        jLabel9.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jLabel9.setText("Fat");
-
-        jLabel10.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jLabel10.setText("Sodium");
-
-        jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jLabel11.setText("Group");
-
-        jLabel12.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jLabel12.setText("Proteins");
-
-        jLabel13.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jLabel13.setText("Sugar");
-
-        ingredientStorebtn.setText("Store");
-        ingredientStorebtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ingredientStorebtnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel9))
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(sugarField, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
-                                    .addComponent(fatField)
-                                    .addComponent(groupField, javax.swing.GroupLayout.Alignment.LEADING)))
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(proteinField)))
-                        .addGap(18, 18, 18)
-                        .addComponent(ingredientStorebtn))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(32, 32, 32)
-                                .addComponent(ingredientNameField, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel10))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(sodiumField, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
-                                    .addComponent(caloriesField))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(29, 29, 29))
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(ingredientNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(caloriesField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(sodiumField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(proteinField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(groupField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(sugarField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(fatField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ingredientStorebtn))
-                .addGap(26, 26, 26))
-        );
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(238, Short.MAX_VALUE))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(72, Short.MAX_VALUE))
-        );
-
-        ManagerSheet.addTab("Add Ingredient", jPanel6);
 
         searchResultsView.setEditable(false);
         searchResultsView.setColumns(20);
@@ -661,6 +639,12 @@ public class RecipeFrame extends javax.swing.JFrame {
         dateTextView.setEditable(false);
         dateTextView.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         dateTextView.setToolTipText("");
+
+        debugArea.setColumns(20);
+        debugArea.setRows(5);
+        jScrollPane7.setViewportView(debugArea);
+
+        jLabel7.setText("Debugging area:");
 
         jMenu1.setText("File");
 
@@ -719,7 +703,11 @@ public class RecipeFrame extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(SearchGo)
-                                    .addComponent(dateTextView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(dateTextView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane7)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -739,7 +727,11 @@ public class RecipeFrame extends javax.swing.JFrame {
                             .addComponent(SearchGo, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
                             .addComponent(RecipeSearchText))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(searchResultsPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(searchResultsPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
@@ -747,23 +739,8 @@ public class RecipeFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    //search button listener
-    private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_searchActionPerformed
-   
-    private void radioBreakfastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBreakfastActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioBreakfastActionPerformed
 
-    private void radioLunchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioLunchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioLunchActionPerformed
-
-    private void radioDinnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioDinnerActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioDinnerActionPerformed
-
+  
     private void menuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveActionPerformed
         // TODO add your handling code here:
         
@@ -777,70 +754,6 @@ public class RecipeFrame extends javax.swing.JFrame {
         // exit the program when selected
         System.exit(0);
     }//GEN-LAST:event_menuItemExitActionPerformed
-
-    private void moveFromListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveFromListActionPerformed
-        // test cases for checkbox selections
-        if(breakfastPlannerCheckbox.isSelected() && lunchPlannerCheckbox.isSelected() && dinnerPlannerCheckbox.isSelected()){
-            breakfastPlannerTextView.setText(recipeListView.getSelectedValue());
-            lunchPlannerTextView.setText(recipeListView.getSelectedValue());
-            dinnerPlannerTextView.setText(recipeListView.getSelectedValue());
-        }  else if(breakfastPlannerCheckbox.isSelected()){
-            if(lunchPlannerCheckbox.isSelected()){
-                breakfastPlannerTextView.setText(recipeListView.getSelectedValue());
-                lunchPlannerTextView.setText(recipeListView.getSelectedValue());
-            } else if(dinnerPlannerCheckbox.isSelected()) {
-                breakfastPlannerTextView.setText(recipeListView.getSelectedValue());
-                dinnerPlannerTextView.setText(recipeListView.getSelectedValue());
-            } else {
-                breakfastPlannerTextView.setText(recipeListView.getSelectedValue());
-            }
-        } else {
-            if(lunchPlannerCheckbox.isSelected()) {
-                if(dinnerPlannerCheckbox.isSelected()){
-                    lunchPlannerTextView.setText(recipeListView.getSelectedValue());
-                    dinnerPlannerTextView.setText(recipeListView.getSelectedValue());
-                } else {
-                    lunchPlannerTextView.setText(recipeListView.getSelectedValue());
-                }
-            } else if(dinnerPlannerCheckbox.isSelected()){
-                dinnerPlannerTextView.setText(recipeListView.getSelectedValue());
-            } else {
-                //do nothing, could add tip here, no items selected.
-            }
-        }
-    }//GEN-LAST:event_moveFromListActionPerformed
-
-    private void ingredientStorebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingredientStorebtnActionPerformed
-        // establish Connection to the database
-        Connection conn = dbHandler.setupConnection();
-        //insert ingredients to db
-        dbHandler.insertIngredient(ingredientNameField.getText(), Integer.parseInt(caloriesField.getText()), Integer.parseInt(fatField.getText()),
-                Integer.parseInt(sodiumField.getText()), groupField.getText(), Integer.parseInt(proteinField.getText()), Integer.parseInt(sugarField.getText()));
-        //close connection
-        dbHandler.close(conn);
-        //clear all fields
-        ingredientNameField.setText("");
-        caloriesField.setText("");
-        fatField.setText("");
-        sodiumField.setText("");
-        groupField.setText("");
-        proteinField.setText("");
-        sugarField.setText("");
-    }//GEN-LAST:event_ingredientStorebtnActionPerformed
-
-    private void storeRecipeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeRecipeActionPerformed
-        // establish Connection to the database
-        Connection conn = dbHandler.setupConnection();
-        //insert recipe and instructions
-        dbHandler.insertRecipe(addRecipeTextField.getText(), recipeInstructionField.getText(), recipeCategoryField.getText());
-        //close connection
-        dbHandler.close(conn);
-        //clear fields
-        addRecipeTextField.setText("");
-        recipeInstructionField.setText("");
-        recipeCategoryField.setText("");
-        
-    }//GEN-LAST:event_storeRecipeActionPerformed
 
     private void clearPlannerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearPlannerActionPerformed
         // TODO add your handling code here:
@@ -857,6 +770,81 @@ public class RecipeFrame extends javax.swing.JFrame {
             dinnerPlannerTextView.setText("");
         }
     }//GEN-LAST:event_DayOfWeekDropMenuActionPerformed
+        
+        //this method is going to add ingredients to an array of ingredients
+    private void addIngredientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addIngredientActionPerformed
+        // TODO add your handling code here:
+        
+        //define all the variables
+        String ingredientN,ingredientG;
+        int ingredientC, ingredientF, ingredientS,ingredientP, ingredientSug;
+        ingredientN = ingredientName.getText();
+        ingredientC = Integer.parseInt(ingredientCal.getText());
+        ingredientF = Integer.parseInt(ingredientFat.getText());
+        ingredientS = Integer.parseInt(ingredientSodium.getText());
+        ingredientG = ingredientGroup.getText();
+        ingredientP = Integer.parseInt(ingredientProtein.getText());
+        ingredientSug = Integer.parseInt(ingredientSugar.getText());
+
+        //create a new ingredient object
+        Ingredient ingredient = new Ingredient(ingredientN, ingredientC, ingredientF, ingredientS, ingredientG, ingredientP, ingredientSug);
+
+        //add the object into ingredient list
+        newIngredients.add(ingredient);
+
+        //show a message showing the adding is succeeded
+        JOptionPane.showMessageDialog(null, ingredientName.getText() + " is added!");
+        
+        //Debug Code!!! Delete it in Final Code
+        debugArea.setText(debugArea.getText() + "\n" + ingredientName.getText()+ " contains: " + ingredientCal.getText() + " calories!");
+
+        //clear the textfield for entering new ingredients
+        ingredientName.setText("");
+        ingredientCal.setText("");
+        ingredientFat.setText("");
+        ingredientSodium.setText("");
+        ingredientGroup.setText("");
+        ingredientProtein.setText("");
+        ingredientSugar.setText("");
+
+    }//GEN-LAST:event_addIngredientActionPerformed
+
+    private void ingredientNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingredientNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ingredientNameActionPerformed
+
+    //this method will store new recipe into table
+    private void storeRecipeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeRecipeActionPerformed
+        // TODO add your handling code here:
+        //Recipe(String cat, String instruct, String n)
+        String recipeCat, instructions, recipeName;
+        recipeCat = addRecipeCategory.getText();
+        instructions = addRecipeInstructions.getText();
+        recipeName = addRecipeName.getText();
+
+        //New recipe
+        Recipe recipe = new Recipe(recipeCat, instructions, recipeName);
+        DatabaseHandler.addRecipe(recipe, (Ingredient[])newIngredients.toArray());
+    }//GEN-LAST:event_storeRecipeActionPerformed
+
+    private void radioDinnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioDinnerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioDinnerActionPerformed
+
+    private void radioLunchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioLunchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioLunchActionPerformed
+
+    private void radioBreakfastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBreakfastActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioBreakfastActionPerformed
+
+    private void recipeListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recipeListMouseClicked
+        // TODO add your handling code here:
+        List<String> selectedRecipes = recipeList.getSelectedValuesList();
+        debugArea.setText(selectedRecipes.get(0));
+    }//GEN-LAST:event_recipeListMouseClicked
+
 
     /**
      * @param args the command line arguments
@@ -898,73 +886,79 @@ public class RecipeFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> DayOfWeekDropMenu;
     private javax.swing.JLabel InstructionsLabel;
     private javax.swing.JTabbedPane ManagerSheet;
-    private javax.swing.JTextPane RecipeInstructionView;
     private javax.swing.JTextField RecipeSearchText;
-    private javax.swing.JLabel RecipeTitleLabel;
     private javax.swing.JButton SearchGo;
+    private javax.swing.JButton addIngredient;
+    private javax.swing.JTextField addRecipeCategory;
+    private javax.swing.JTextArea addRecipeInstructions;
+    private javax.swing.JTextField addRecipeName;
     private javax.swing.JPanel addRecipePanel;
-    private javax.swing.JTextField addRecipeTextField;
+    private javax.swing.JButton applyButton;
     private javax.swing.JCheckBox breakfastPlannerCheckbox;
     private javax.swing.JTextField breakfastPlannerTextView;
-    private javax.swing.JTextField caloriesField;
     private javax.swing.JButton clearPlanner;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JTextField dateTextView;
+    private javax.swing.JComboBox<String> daysBox;
+    private javax.swing.JTextArea debugArea;
     private javax.swing.JCheckBox dinnerPlannerCheckbox;
     private javax.swing.JTextField dinnerPlannerTextView;
-    private javax.swing.JTextField fatField;
     private javax.swing.JTextArea fridgeListView;
-    private javax.swing.JTextField groupField;
-    private javax.swing.JTextField ingredientNameField;
-    private javax.swing.JButton ingredientStorebtn;
+    private javax.swing.JTextField ingredientCal;
+    private javax.swing.JTextField ingredientFat;
+    private javax.swing.JLabel ingredientFatlab;
+    private javax.swing.JTextField ingredientGroup;
+    private javax.swing.JTextField ingredientName;
+    private javax.swing.JTextField ingredientProtein;
+    private javax.swing.JLabel ingredientProteinlab;
+    private javax.swing.JTextField ingredientSodium;
+    private javax.swing.JTextField ingredientSugar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JCheckBox lunchPlannerCheckbox;
     private javax.swing.JTextField lunchPlannerTextView;
+    private javax.swing.ButtonGroup mealsGroup;
     private javax.swing.JMenuItem menuItemExit;
     private javax.swing.JMenuItem menuItemLoad;
     private javax.swing.JMenuItem menuItemSave;
     private javax.swing.JButton moveFromList;
-    private javax.swing.JTextField proteinField;
+    private javax.swing.JButton moveToList;
     private javax.swing.JRadioButton radioBreakfast;
     private javax.swing.JRadioButton radioDinner;
     private javax.swing.JRadioButton radioLunch;
-    private javax.swing.JTextField recipeCategoryField;
-    private javax.swing.JTextArea recipeInstructionField;
-    private javax.swing.JPanel recipeListPanel;
-    private javax.swing.JList<String> recipeListView;
+    private javax.swing.JList<String> recipeList;
+    private javax.swing.JTextArea recipeSelectionListView;
     private javax.swing.JPanel searchResultsPane;
     private javax.swing.JTextArea searchResultsView;
     private javax.swing.JTextArea shoppingListView;
-    private javax.swing.JTextField sodiumField;
-    private javax.swing.JButton storeMealPlan;
     private javax.swing.JButton storeRecipe;
-    private javax.swing.JTextField sugarField;
     // End of variables declaration//GEN-END:variables
 }
