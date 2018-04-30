@@ -873,45 +873,57 @@ public class RecipeFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_moveFromListActionPerformed
 
+	//***************************************************************************************************
     private void ingredientStorebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingredientStorebtnActionPerformed
         
-        //insert ingredients to db
-        Ingredient i = new Ingredient(ingredientNameField.getText(), Integer.parseInt(caloriesField.getText()), Integer.parseInt(fatField.getText()),
-                                    Integer.parseInt(sodiumField.getText()), groupField.getText(), Integer.parseInt(proteinField.getText()), Integer.parseInt(sugarField.getText()));
+       //define all the variables
+        String ingredientN,ingredientG;
+        int ingredientC, ingredientF, ingredientS,ingredientP, ingredientSug;
+        ingredientN = ingredientName.getText();
+        ingredientC = Integer.parseInt(ingredientCal.getText());
+        ingredientF = Integer.parseInt(ingredientFat.getText());
+        ingredientS = Integer.parseInt(ingredientSodium.getText());
+        ingredientG = ingredientGroup.getText();
+        ingredientP = Integer.parseInt(ingredientProtein.getText());
+        ingredientSug = Integer.parseInt(ingredientSugar.getText());
+
+        //create a new ingredient object
+        Ingredient ingredient = new Ingredient(ingredientN, ingredientC, ingredientF, ingredientS, ingredientG, ingredientP, ingredientSug);
+
+        //add the object into ingredient list
+        newIngredients.add(ingredient);
+
+        //show a message showing the adding is succeeded
+        JOptionPane.showMessageDialog(null, ingredientName.getText() + " is added!");
         
-        DatabaseHandler.insertIngredient(i);
-        
-        //clear all fields
-        ingredientNameField.setText("");
-        caloriesField.setText("");
-        fatField.setText("");
-        sodiumField.setText("");
-        groupField.setText("");
-        proteinField.setText("");
-        sugarField.setText("");
+        //Debug Code!!! Delete it in Final Code
+        debugArea.setText(debugArea.getText() + "\n" + ingredientName.getText()+ " contains: " + ingredientCal.getText() + " calories!");
+
+        //clear the textfield for entering new ingredients
+        ingredientName.setText("");
+        ingredientCal.setText("");
+        ingredientFat.setText("");
+        ingredientSodium.setText("");
+        ingredientGroup.setText("");
+        ingredientProtein.setText("");
+        ingredientSugar.setText("");
     }//GEN-LAST:event_ingredientStorebtnActionPerformed
 
-    private void storeRecipeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeRecipeActionPerformed
-         /*
-        Since DatabaseHandler's methods create the connection and close them in its
-        own methods there is no reason to establish another connection.
-        */
-         
-        //insert recipe and instructions
-        //need to make recipe object
-        Recipe r = new Recipe(addRecipeTextField.getText(), recipeInstructionField.getText(), recipeCategoryField.getText());
-        
-        //n should be the number of ingredients chosen by the user.
-        int n = 0;
-        Ingredient[] ingredients = new Ingredient[n];
-        //will need to add the chosen ingredients to the array so that addRecipe can be called.
-        DatabaseHandler.addRecipe(r,ingredients);       
-        //clear fields
-        addRecipeTextField.setText("");
-        recipeInstructionField.setText("");
-        recipeCategoryField.setText("");      
-    }//GEN-LAST:event_storeRecipeActionPerformed
+ //this method will store new recipe into table
+    private void storeRecipeActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+        //Recipe(String cat, String instruct, String n)
+        String recipeCat, instructions, recipeName;
+        recipeCat = addRecipeCategory.getText();
+        instructions = addRecipeInstructions.getText();
+        recipeName = addRecipeName.getText();
 
+        //New recipe
+        Recipe recipe = new Recipe(recipeCat, instructions, recipeName);
+        DatabaseHandler.addRecipe(recipe, (Ingredient[])newIngredients.toArray());
+    }                                           
+//**********************************************************************************************************************
+	
     private void clearPlannerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearPlannerActionPerformed
         // TODO add your handling code here:
         breakfastPlannerTextView.setText("");
